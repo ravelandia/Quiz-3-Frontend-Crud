@@ -142,34 +142,36 @@ eliminar_registro()
 
 function Modificar() {
     let btns_detalles = document.querySelectorAll('.modificar')
-
+    let student
     btns_detalles.forEach(btn => {
 
         btn.addEventListener('click', (e) => {
 
             recorrerInputs(input => {
                 let estudiantes = window.localStorage.getItem('estudiantes')
-                //Obtener el estudiante
                 estudiantes = JSON.parse(estudiantes)
-                let estudiante = estudiantes.find(estudiante => estudiante.id == btn.parentElement.parentElement.children[0].innerText)
-                //hallar index de estudiante
-
-                input.value = estudiante[input.name]
+                student = estudiantes.find(estudiante => estudiante.id == btn.parentElement.parentElement.children[0].innerText)
+                input.value = student[input.name]
             })
+            
+            let actualizar = document.getElementById('enviar_info')
+            actualizar.addEventListener('click', () => {
+                recorrerInputs(input => {
+                    let estudiantes = window.localStorage.getItem('estudiantes')
+                    estudiantes = JSON.parse(estudiantes)
+                    let estudiante = estudiantes.find(estudiante => estudiante.id == btn.parentElement.parentElement.children[0].innerText)
+                    estudiante[input.name] = input.value
+                    //Ubicar estudiante en una posicion de estudiantes
+                    let posicion = estudiantes.indexOf(estudiante)
+                    console.log(posicion)
+                    estudiantes[posicion] = estudiante
+                    window.localStorage.setItem('estudiantes', JSON.stringify(estudiantes))
 
-            recorrerInputs(input => {
-                estudiante = {
-                    ...estudiante,
-                    [input.name]: input.value
-                }
+                })
             })
-            estudiantes = JSON.parse(estudiantes)
-            //Guardar en una posicion del vector
-            estudiantes[estudiantes.findIndex(estudiante => estudiante.id == btn.parentElement.parentElement.children[0].innerText)] = estudiante
-            window.localStorage.setItem('estudiantes', JSON.stringify(estudiantes))
-
         })
     });
+
 }
 function detalles() {
     let btns_detalles = document.querySelectorAll('.detalles')
